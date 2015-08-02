@@ -17,31 +17,28 @@
  * along with lvfs-qplayer. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "lvfs_qplayer_Editor.h"
-#include "gui/lvfs_qplayer_Player.h"
+#ifndef LVFS_QPLAYER_PLAYER_H_
+#define LVFS_QPLAYER_PLAYER_H_
 
-#include <lvfs/IEntry>
+#include <lvfs/IStream>
+#include <QtGui/QDialog>
+#include <platform/utils.h>
+#include <phonon/videoplayer.h>
 
 
-namespace LVFS {
-namespace QPlayer {
+using namespace LVFS;
 
-Editor::Editor(const Interface::Holder &file) :
-    ExtendsBy(file)
-{}
 
-Editor::~Editor()
-{}
-
-void Editor::view(QWidget *parent)
+class PLATFORM_MAKE_PRIVATE Player : public QDialog
 {
-    Interface::Holder fp = original()->as<IEntry>()->open();
+    Q_OBJECT
 
-    if (fp.isValid())
-    {
-        Player widget(fp, parent);
-        widget.exec();
-    }
-}
+public:
+    Player(const Interface::Adaptor<IStream> &file, QWidget *parent = 0);
+    virtual ~Player();
 
-}}
+private:
+    Phonon::VideoPlayer m_player;
+};
+
+#endif /* LVFS_QPLAYER_PLAYER_H_ */

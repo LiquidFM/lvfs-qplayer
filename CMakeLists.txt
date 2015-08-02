@@ -21,7 +21,7 @@ list (APPEND ${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_MOC_SOURCES})
 
 # Target - lvfs-qplayer
 add_library (lvfs-qplayer SHARED ${${PROJECT_NAME}_SOURCES})
-target_link_libraries (lvfs-qplayer ${${PROJECT_NAME}_LIBS})
+target_link_libraries (lvfs-qplayer ${${PROJECT_NAME}_LIBS} -lphonon)
 
 # Version
 build_version_file (lvfs-qplayer 0.0.1)
