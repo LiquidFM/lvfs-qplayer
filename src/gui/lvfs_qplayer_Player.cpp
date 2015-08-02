@@ -39,6 +39,7 @@ namespace {
             m_size(0),
             m_abort(false),
             m_offset(-1),
+            m_ignoreReset(true),
             m_eof(false),
             m_needData(false),
             m_setOffset(false),
@@ -121,13 +122,18 @@ namespace {
          */
         virtual void seekStream(qint64 offset)
         {
-            EFC::Mutex::Locker lock(m_handler.mutex());
-
-            if (m_handler.isRunning())
+            if (UNLIKELY(m_ignoreReset == true))
+                m_ignoreReset = false;
+            else
             {
-                m_offset = offset;
-                m_setOffset = true;
-                m_condition.wakeAll();
+                EFC::Mutex::Locker lock(m_handler.mutex());
+
+                if (m_handler.isRunning())
+                {
+                    m_offset = offset;
+                    m_setOffset = true;
+                    m_condition.wakeAll();
+                }
             }
         }
 
@@ -165,6 +171,7 @@ namespace {
         int m_size;
         bool m_abort;
         qint64 m_offset;
+        bool m_ignoreReset;
         volatile bool m_eof;
         volatile bool m_needData;
         volatile bool m_setOffset;
