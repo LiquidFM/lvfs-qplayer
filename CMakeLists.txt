@@ -1,18 +1,23 @@
 project (lvfs-qplayer)
 
+# Custom modules
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # Project header
-project_library_header_default ()
+project_header_default ("POSITION_INDEPENDENT_CODE:YES")
 
 # 3rdparty
-list (APPEND ${PROJECT_NAME}_LIBS brolly)
-list (APPEND ${PROJECT_NAME}_LIBS efc)
-list (APPEND ${PROJECT_NAME}_LIBS lvfs)
-list (APPEND ${PROJECT_NAME}_LIBS lvfs-core)
+find_package (Lvfs-Core REQUIRED)
+include_directories (${LVFS_CORE_INCLUDE})
 
-find_package (Qt4 4.7.1 COMPONENTS QtCore QtGui REQUIRED)
-include (${QT_USE_FILE})
+find_package (Phonon REQUIRED)
+include_directories (${PHONON_INCLUDE})
+
+list (APPEND ${PROJECT_NAME}_LIBS ${EFC_LIB})
+list (APPEND ${PROJECT_NAME}_LIBS ${LVFS_LIB})
+list (APPEND ${PROJECT_NAME}_LIBS ${PHONON_LIB})
 list (APPEND ${PROJECT_NAME}_LIBS ${QT_LIBRARIES})
-add_definitions (${QT_DEFINITIONS} -DQT_NO_CAST_FROM_ASCII)
+list (APPEND ${PROJECT_NAME}_LIBS ${LVFS_CORE_LIB})
 
 # Sources
 add_subdirectory (src)
@@ -21,13 +26,10 @@ list (APPEND ${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_MOC_SOURCES})
 
 # Target - lvfs-qplayer
 add_library (lvfs-qplayer SHARED ${${PROJECT_NAME}_SOURCES})
-target_link_libraries (lvfs-qplayer ${${PROJECT_NAME}_LIBS} -lphonon)
-
-# Version
-build_version_file (lvfs-qplayer 0.0.1)
+target_link_libraries (lvfs-qplayer ${${PROJECT_NAME}_LIBS})
 
 # Documentation
-add_documentation ("LVFS-QPlayer" 0.0.1 "LVFS Plugin for playing audio/video files")
+add_documentation ("LVFS-QPlayer" 0.0.1 "LVFS Plugin to play audio/video files")
 
 # Install rules
 install_target (lvfs-qplayer)

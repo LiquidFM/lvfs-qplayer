@@ -1,7 +1,7 @@
 /**
  * This file is part of lvfs-qplayer.
  *
- * Copyright (C) 2011-2015 Dmitriy Vilkov, <dav.daemon@gmail.com>
+ * Copyright (C) 2011-2016 Dmitriy Vilkov, <dav.daemon@gmail.com>
  *
  * lvfs-qplayer is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 #include "lvfs_qplayer_Package.h"
 #include "lvfs_qplayer_Plugin.h"
 
+#include <lvfs/plugins/Package>
+
 
 namespace LVFS {
 namespace QPlayer {
@@ -35,7 +37,7 @@ const char *Package::name() const
     return "QPlayer";
 }
 
-Package::Settings *Package::settings() const
+Settings::Scope *Package::settings() const
 {
     return NULL;
 }
@@ -128,4 +130,4 @@ const Package::Plugin **Package::protocolPlugins() const
 }}
 
 
-DECLARE_PLUGIN(::LVFS::QPlayer::Package)
+DECLARE_PLUGINS_PACKAGE(::LVFS::QPlayer::Package)
